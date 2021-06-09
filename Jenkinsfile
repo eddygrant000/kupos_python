@@ -6,7 +6,7 @@ pipeline {
                git branch: 'main', url: 'https://github.com/Yogesh238/kupos_python_source.git'
               }
     }
-    stage('build') {
+    stage('Install Flask Package') {
       steps {
         sh 'pip install -r requirements.txt'
       }

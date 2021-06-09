@@ -8,13 +8,15 @@ pipeline {
     }
     stage('Build and Deploy') {
       steps {
-        sh 'ssh root@54.84.99.76 apt update'
-        sh 'ssh root@54.84.99.76 apt install python3-pip'
-        sh 'ssh root@54.84.99.76 systemctl stop flask.service'
+        sshagent(credentials : ['appserver']) {
+        sh 'ssh -o StrictHostKeyChecking=no root@54.84.99.76 apt update'
+        sh 'ssh -o StrictHostKeyChecking=no root@54.84.99.76 apt install python3-pip'
+        sh 'ssh -o StrictHostKeyChecking=no root@54.84.99.76 systemctl stop flask.service'
         sh 'scp -r * root@54.84.99.76:/root/flaskapp'
-        sh 'ssh root@54.84.99.76 pip3 install -r /root/flaskapp/requirements.txt'
-        sh 'ssh root@54.84.99.76 systemctl start flask.service'
+        sh 'ssh -o StrictHostKeyChecking=no root@54.84.99.76 pip3 install -r /root/flaskapp/requirements.txt'
+        sh 'ssh -o StrictHostKeyChecking=no root@54.84.99.76 systemctl start flask.service'
       }
+    }
     }
   }
 }
